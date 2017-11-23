@@ -326,5 +326,4 @@ describe('request', () => {
         responseStub.emit('data', Buffer.from('hello'));
         responseStub.emit('end');
     });
-
 });
