@@ -55,7 +55,24 @@ describe('request timeout', () => {
             server.listen();
         });
 
-        it('should abort request with timeout', (done) => {
+        it('should overwrite connection timeout of agent', (done) => {
+            const agent = new Agent({
+                timeout: 1000000000
+            });
+            const options = {
+                agent,
+                timeout: 1,
+                protocol: 'http:',
+                host: 'www.zalando.de'
+            };
+
+            request(options).catch(error => {
+                assert.equal(error.message, 'socket timeout');
+                done();
+            }).catch(done);
+        });
+
+        it('should abort request with timeout after connection', (done) => {
             server = http.createServer((req, res) => {
                 setTimeout(() => {
                     res.writeHead(200, {
@@ -76,10 +93,7 @@ describe('request timeout', () => {
                 };
 
                 request(options).catch(error => {
-                    // request.js
                     assert.equal(error.message, 'socket timeout');
-                    // agentkeepalive
-                    // assert.equal(error.message, 'socket hang up');
                     done();
                 }).catch(done);
             });

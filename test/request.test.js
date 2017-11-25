@@ -56,9 +56,6 @@ describe('request', () => {
         clock.restore();
     });
 
-    afterEach(() => {
-        clock.restore();
-    });
     it('should call https if protocol is not specified', () => {
         request();
         assert.equal(httpsStub.request.callCount, 1);
